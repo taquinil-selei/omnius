@@ -1,0 +1,72 @@
+Rozšířím původní funkční specifikaci o **CLUI/Ariadne vrstvu** bez zásahu do zbytku – přidávám ji jako nový modul a doplňuji provázanost.
+
+---
+
+## 3.11 Command Line User Interface (CLUI) / Ariadne Layer
+
+* **Účel**: Jednotné textové rozhraní pro řízení všech operací platformy.
+* **Princip**: Každá akce, kterou lze provést přes GUI, API nebo automatizaci, je dostupná i jako příkaz v CLUI.
+* **Provázanost**: CLUI sedí přímo nad **artefaktovým grafem** a **orchestrace enginem** (Camunda, Nexus integrace, AI agenty).
+* **Syntaxe**:
+
+  * Základní příkazy: `/task new`, `/link`, `/run`, `/check`, `/deploy`, `/doc`, `/ingest`, `/generate`.
+  * Parametrizace: příkazy přijímají klíče/parametry pro přesné ovládání (např. `/check --scope model:db`).
+  * **NLP režim**: AI copilot překládá přirozený jazyk do parametrizovaných příkazů.
+* **Bezpečnost a role**:
+
+  * Každý příkaz podléhá autorizaci (RBAC/ABAC).
+  * **God Mode**: dostupný pouze určenému uživateli (root architect).
+
+    * Aktivace možná jen po splnění heuristických algoritmů (např. multi-faktor, sekvenční logické výzvy).
+    * God mode umožňuje obejít běžné policy brány (SACC), modifikovat graf, přímo generovat či mazat artefakty.
+* **Integrace**:
+
+  * CLUI příkazy = 1:1 s REST/gRPC API.
+  * CLI → API → Engine → Graf.
+  * Výstupy příkazů jsou ukládány jako transakce (audit trail).
+* **Akceptační kritéria**:
+
+  * 100 % API funkcí dostupných přes CLUI.
+  * NLP mód správně překládá ≥ 80 % příkazů na první pokus.
+  * Audit trail každého příkazu s uživatelem, časem, parametry a výsledkem.
+  * God Mode viditelný jen v systému root architektovi; žádná jiná role nesmí mít možnost aktivace.
+
+---
+
+## 4) Synergie Omnius ↔ AppHold (doplněno o CLUI)
+
+* Všechny moduly (Tapestry, Entitron, Mozaic, Nexus, Sphynx, Watchtower, Storia, AppHold SACC/SAR) jsou ovladatelné **CLUI příkazy**.
+* CLUI tvoří společný „command bus“, kde lze:
+
+  * Vytvořit block v Tapestry (`/block new`),
+  * Spustit compliance check v AppHold (`/check --scope req:kod`),
+  * Generovat dokumentaci (`/doc export --format pdf`),
+  * Spustit testy (`/test run sphynx`),
+  * Spravovat integrace (`/nexus connect --type git --url ...`).
+* NLP režim umožní, aby uživatel napsal: *„Zkontroluj, jestli databázový model odpovídá specifikaci UC123“* a systém to přeloží na `/check --scope model:db --uc 123`.
+
+---
+
+## 5) Klíčové workflow (doplněno o CLUI)
+
+* **WF1 (On-the-fly gate)**: CI pipeline volá `/check` příkaz, CLUI loguje výsledek.
+* **WF2 (Static audit)**: Architekt spustí `/audit import legacy --repo …` → SAR generuje model.
+* **WF3 (Změna požadavku)**: `/req update REQ123` → systém přes CLUI spustí diff, naváže findings.
+* **WF4 (Commit wizard)**: CLUI příkaz `/commit analyze --id abc123` spustí check proti modelu.
+* **WF5 (God Mode)**: Root architekt může `/graph edit` přímo měnit vazby nebo mazat findings, i když běžná politika to nedovoluje.
+
+---
+
+## 6) API a datové kontrakty (doplněno o CLUI)
+
+* Každé API volání má CLI ekvivalent.
+* `/cli/exec` POST {command, params} → Response (stdout, stderr, status, artifacts\[], findings\[]).
+* NLP vrstva: `/cli/nlp` POST {utterance} → ParsedCommand → `/cli/exec`.
+
+---
+
+Tímto se specifikace rozšiřuje o **plnohodnotný příkazový režim (CLUI/Ariadne)**, který sjednocuje ovládání celé platformy, poskytuje audit trail a umožňuje i privilegovaný „god mode“ přístup.
+
+---
+
+Chceš, abych ti k tomu teď ještě navrhl **ukázkový command set** (např. 10–15 příkazů) tak, jak by vypadal v praxi pro Omnius/AppHold?

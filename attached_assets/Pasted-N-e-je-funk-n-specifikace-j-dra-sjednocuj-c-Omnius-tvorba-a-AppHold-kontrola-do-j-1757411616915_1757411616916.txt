@@ -1,0 +1,209 @@
+Níže je **funkční specifikace jádra** sjednocující **Omnius** (tvorba) a **AppHold** (kontrola) do jednoho vzoru. Cíl: obecný pattern použitelný napříč doménami.
+
+---
+
+## 0) Cíl a scope
+
+* Cíl: **nepřetržitá shoda „zadání → model → implementace → běh“** s automatizací návrhu, generování, kontroly a dokumentace.
+* Scope: nový vývoj i legacy. Režimy **on‑the‑fly** (CI/CD a před releasem) a **static** (audit existujícího systému). Multi‑tenant.
+
+---
+
+## 1) Sdílené meta‑patterny (esence řešení)
+
+1. **Spec–Status–Reconcile**
+
+   * *Spec* = deklarativní požadavky, arch. rozhodnutí, modely, kontrakty.
+   * *Status* = kód, DB, BPMN runtime, logy, metriky.
+   * *Reconcile* = automatická smyčka, která zjišťuje odchylky a navrhuje/realizuje nápravu.
+2. **Artefaktový graf (UAM/UAL)**
+
+   * Jeden univerzální model artefaktů a vazeb M\:N napříč vrstvami (REQ, UC/US, model, kód, DB, API, test, infra, log).
+   * Graf = zdroj pravdy pro traceability, compliance, dokumentaci.
+3. **Kontrakty a generátory**
+
+   * Kontrakty: OpenAPI/AsyncAPI, ER/JSON schema, BPMN/DMN, UI spec, RBAC/ABAC policy.
+   * Generátory: scaffoldy workerů, DB migrace, UI skeletony, testy, ADR, dokumentace.
+4. **Sběrače a pozorovatelé**
+
+   * Adaptery do GIT/CI, CASE, RDBMS, orchestrátoru, telemetry. Periodický i event‑driven sběr.
+5. **Kontroly a brány (SACC)**
+
+   * Strojové kontroly shody **Spec↔Status**. CI/CD gates, release gates, auditní reporty.
+   * **SAR** pro rekonstrukci architektury u legacy.
+6. **Dokumentace = derivát grafu**
+
+   * „Živá“ dokumentace se generuje z grafu + kontraktů + běhových důkazů.
+7. **AI role**
+
+   * Extraktor (text→model/UC), Párovač (artefakt↔artefakt), Generátor (kód/test/ADR/doc), Rozhodčí (impact, riziko), Asistent remediace.
+
+---
+
+## 2) Doménový model (základ)
+
+* **Artifact**{id, type, origin, locator, schemaRef, contentHash, version, meta}
+  Typy: Requirement, UseCase, ModelElement, SourceCode, DBEntity, APIContract, BPMN/DMN, UITemplate, TestCase, EnvConfig, Log/Metric, ADR.
+* **Link**{fromId, toId, kind, cardinality, confidence, createdBy, ts}
+  Příklady: *implements, verifies, generates, deploysTo, dependsOn*.
+* **Policy/Rule**{id, scope, expression, severity} → hodnotí vazby/obsah.
+* **Check**{id, policyId, scope} → **Finding**{severity, msg, refs}.
+* **Project/Tenant**, **Release**, **Task**, **Glossary**, **ADR**.
+
+---
+
+## 3) Funkční moduly a požadavky
+
+### 3.1 Catalog & Ingest
+
+* Příjem artefaktů a metadat z nástrojů (GIT, Camunda, RDBMS, OpenAPI, test management, logs).
+* Verzování, deduplikace, indexace do grafu.
+* **Akceptace**: ingest ≥ 100k artefaktů/projekt, idempotentní načtení, delta sync < 5 min.
+
+### 3.2 Mapping & Traceability
+
+* Tvorba a správa vazeb ručně, polo‑automaticky (AI návrh), plně automaticky (pravidla).
+* Matice pokrytí, heatmapy chybějících vazeb, historie ručních schválení.
+* **Akceptace**: precision/recall AI párování ≥ 0,8 na vzorku, editace vazeb s audit trail.
+
+### 3.3 Compliance (SACC)
+
+* Definice politik: **Model↔Kód**, **Model↔DB**, **REQ↔Test**, **BPMN↔Worker**, **API↔Impl**, **RBAC/ABAC**.
+* Spouštění kontrol: on‑commit, on‑merge, pre‑release, on‑schedule, on‑demand.
+* Reporty odchylek s návrhem nápravy; automatická tvorba **Task** v PM nástroji.
+* **Akceptace**: CI gate fail při high‑severity findings; export PDF/JSON; SLA běhu checku < 3 min/1000 vazeb.
+
+### 3.4 Reconstruction (SAR)
+
+* Reverse‑engineering modelu z kódu/DB/BPMN/logů; generace návrhu domén a kontextů.
+* **Akceptace**: generuje min. ER nástřel, komponentový diagram a seznam API s ≥ 80 % pokrytím.
+
+### 3.5 Generation
+
+* Scaffold: workers, DB migrace, OpenAPI klient/server, UI skeletony, test cases, ADR.
+* **Akceptace**: kompilovatelný skeleton; 30–70 % kódu bloku bez ruční editace.
+
+### 3.6 Documentation
+
+* On‑the‑fly sestavení dokumentace z grafu: požadavky, modely, sekvence, ADR, changelog, release notes.
+* Export: HTML, PDF, OpenAPI bundle, PlantUML/Mermaid, C4.
+* **Akceptace**: 100 % artefaktů má odkaz do dokumentace; dify mezi verzemi.
+
+### 3.7 Observability & Evidence
+
+* Sběr OTel log/metric/trace, vazba běhových důkazů na Spec (např. BPMN instance ↔ požadavek).
+* **Akceptace**: korelace trace→REQ ve 2 krocích; SLO dashboard; důkaz pro audit.
+
+### 3.8 Integrations Hub
+
+* Adaptery: GitHub/GitLab/Azure DevOps, Camunda 8, JDBC introspekce, OpenAPI/AsyncAPI, Jira, Confluence, EA/XMI, test tools, S3/Blob.
+* Webhooky, plánovače, throttling, DLQ.
+* **Akceptace**: min. 10 adapterů v MVP; backoff a retry; monitoring konektorů.
+
+### 3.9 Orchestrace a UI (spojení s Omnius)
+
+* **Camunda** jako orchestrátor (BPMN/DMN); workers = generované služby.
+* **UI Designer** propojen přes kontrakty (UI↔REQ↔Test).
+* **Akceptace**: round‑trip BPMN↔workers; UI mapování na požadavky a testy.
+
+### 3.10 AI Copilot & Agenti
+
+* **Roles**: Requirement→Model, Impact analyzér, Mapper, Test‑maker, Doc‑weaver, Fix‑advisor.
+* **Guardrails**: schválení člověkem, explain‑why, reproducibilní výstup.
+* **Akceptace**: lidské schválení před zápisem; audit prompt→artefakt.
+
+---
+
+## 4) Synergie Omnius ↔ AppHold (konkrétně)
+
+* **Tapestry (Camunda)** ↔ **SACC**: BPMN/DMN compliance, worker contract checks.
+* **Entitron (Data)** ↔ **SACC**: ER/JSON schema vs. DB instance.
+* **Mozaic (UI)** ↔ **Trace/Test**: US/UC→UI mapování, generované UAT.
+* **Nexus (Integrace)** ↔ **Contract**: OpenAPI/AsyncAPI vs. implementace, test stuby.
+* **Sphynx (Testy)** ↔ **Coverage**: REQ↔Test matrix, auto‑testy.
+* **Watchtower (běh)** ↔ **Evidence**: běhové důkazy shody.
+* **Storia (Legacy)** ↔ **SAR**: discovery, migrační návrh.
+
+---
+
+## 5) Klíčové workflow
+
+### WF1: On‑the‑fly gate (nový vývoj)
+
+1. REQ/UC/Model → generátor scaffoldů.
+2. Commit → ingest → mapování → **SACC**.
+3. Findings → auto‑tasks v PM → návrh oprav (AI).
+4. Gate pass → release → evidence do dokumentace.
+
+### WF2: Static audit (legacy)
+
+1. Ingest kódu/DB/API/BPMN/logů → **SAR**.
+2. Vznikne Spec návrh → **SACC** proti Status.
+3. Gap list + roadmapa. Volitelně generace quick‑wins (Omnius bloky).
+
+### WF3: Změna požadavku → impact
+
+1. REQ změna → graf dif → dopad na model/kód/test/deploy.
+2. Tasky + návrhy úprav; gate drží, dokud nejsou splněna akceptační kritéria.
+
+### WF4: Commit wizard (Kamilův scénář)
+
+1. Commit → delta map → změny tříd/metod vs. model.
+2. Uloží „obraz“ checku (commitId, nález).
+3. Auto‑tasky; při vypořádání wizard loguje akce a uzavírá úkol.
+
+---
+
+## 6) API a datové kontrakty (nástin)
+
+* **/ingest** POST Artifact|Batch
+* **/links** PUT/POST Link
+* **/checks/run** POST {scope, policies\[]} → Findings\[]
+* **/reports** GET {type, version} → PDF/JSON
+* **/tasks** POST {findingId, assignee, acceptance}
+* **/generate** POST {target: worker|db|ui|test|adr, sourceRefs\[]}
+* **/doc/export** GET {format}
+* **/graph/query** POST GQL
+
+---
+
+## 7) Nefunkční požadavky
+
+* Výkon: 1M artefaktů/graf, check 10k vazeb < 2 min.
+* Spolehlivost: HA, RPO≤5 min, RTO≤30 min.
+* Bezpečnost: OIDC/OAuth2, RBAC/ABAC (OPA), audit, šifrování v klidu i přenosu, izolace tenantů.
+* IaaC: K8s, IaC pipelines, observabilita OTel.
+
+---
+
+## 8) MVP rozsah
+
+* Graf + Ingest (Git, Camunda, JDBC, OpenAPI, Jira).
+* SACC politiky: Model↔Kód, Model↔DB, REQ↔Test, API↔Impl.
+* CI gate, reporty, auto‑tasks.
+* SAR v „lite“ režimu (kód+DB→ER+komponenty).
+* Generátor scaffoldů workerů a DB migrací.
+* Doc export (HTML/PDF), ADR.
+* 1 základní AI use‑case: REQ→UC/ER extraction.
+
+---
+
+## 9) KPI a DOD
+
+* **TTM**: 30–60 % zkrácení díky scaffoldům a AI.
+* **Coverage**: REQ pokrytí testy ≥ 90 %.
+* **Defects escape rate**: −50 % po zavedení gates.
+* **Doc freshness**: 100 % artefaktů má aktuální odkaz v dokumentaci.
+* DOD: žádné **high‑severity** findings, trace matrix úplná, doc generována, ADR doplněna, SLO splněno.
+
+---
+
+## 10) Rizika a mitigace
+
+* Šum v AI párování → human‑in‑the‑loop, confidence threshold, aktivní učení.
+* Vendor lock‑in → otevřená API, export všech dat (graph dump, doc, kontrakty).
+* Odpor týmů k procesním bránám → konfigurovatelné severity, postupná adopce, rychlé feedbacky.
+
+---
+
+Toto je „meta‑specifikace“ společného jádra. Pokrývá překryvné funkce, jasné synergie a obecné patterny. Stačí ji rozpadnout do backlogu epik na **Catalog/Graph, Compliance, Generation, Documentation, Integrations, AI** a spustit MVP.
