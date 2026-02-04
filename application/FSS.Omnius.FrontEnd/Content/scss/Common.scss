@@ -1,0 +1,496 @@
+﻿.mytooltip {
+    position: relative;
+    border-bottom: 1px dotted black;
+}
+.mytooltip .tooltiptext {
+    visibility: hidden;
+    min-width: 720px;
+    background-color: #444;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 0%;
+
+    th {
+        padding-right: 5px;
+        text-align: right;
+    }
+
+    td {
+        text-align: left;
+    }
+}
+.mytooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+.ui-dialog {
+    position:fixed !important; //hack for jQueryUI setting position:absolute and mispositioning dialogs
+    padding: 0px 0px;
+    border: 1px solid black;
+    border-radius: 4px;
+
+    .ui-widget-header {
+        background-image: none;
+        background-color: #2d74b2;
+        color: white;
+    }
+    .ui-dialog-buttonpane {
+        padding: 3px;
+        border-radius: 4px;
+    }
+    .ui-dialog-buttonset button {
+        margin: 3px;
+    }
+    .ui-dialog-titlebar-close {
+        background: url("/Content/Images/ui-icons_888888_256x240.png") repeat scroll -93px -128px rgba(0, 0, 0, 0);
+        border: medium none;
+    }
+    .ui-dialog-titlebar-close:hover {
+        background: url("/Content/Images/ui-icons_222222_256x240.png") repeat scroll -93px -128px rgba(0, 0, 0, 0);
+    }
+}
+.ui-widget {
+    font-size: 1em !important;
+}
+.lowerLeftDecoration {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: -10;
+}
+.lowerLeftDecorationEditSymbol {
+    @include no-select();
+    position: absolute;
+    left: 22px;
+    top: 58px;
+    color: #F68D4D;
+    font-size: 22px;
+}
+.lowerRightDecoration {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    z-index: -10;
+}
+.table-omnius {
+    thead {
+        background-color: #457fa9;
+        color: white;
+    }
+    tbody td {
+        vertical-align: middle !important;
+    }
+    td.table-row-action {
+        white-space: nowrap;
+    }
+}
+.btn-omnius-blue {
+    position: relative;
+    display: inline-block;
+    height: 38px;
+    margin-right: 17px;
+    white-space: nowrap;
+    background-color: #49c3f1;
+    color: white;
+    padding: 9px 12px;
+    font-size: 18px;
+    vertical-align: middle;
+    font-family: MyriadPro, FontAwesome;
+}
+.btn-omnius-blue:hover {
+    background-color: #2ddef9;
+}
+.btn-omnius-red {
+    position: relative;
+    display: inline-block;
+    height: 38px;
+    margin-right: 17px;
+    white-space: nowrap;
+    background-color: #d9534f;
+    color: white;
+    padding: 9px 12px;
+    font-size: 18px;
+    vertical-align: middle;
+    font-family: MyriadPro, FontAwesome;
+}
+.btn-omnius-red:hover {
+    background-color: #f06771;
+}
+.btn.fa:before {
+    margin-right: 10px;
+}
+.btn.fa.ico-only:before {
+    margin-right: 0px;
+}
+.btn-omnius-rectangular {
+    background-color: #49c3f1;
+    color: black;
+    width: 120px;
+    height: 40px;
+    border: none;
+    font-family: MyriadPro;
+    font-size: 16px;
+}
+.btn-omnius-rectangular:hover {
+    background-color: #2ddef9;
+}
+.btn-omnius-rectangular:disabled {
+    background-color: #a0a0a0;
+}
+.tileMenuArea {
+    position: absolute;
+    left: 80px;
+    top: 105px;
+    right: 40px;
+    white-space: nowrap;
+    vertical-align: top;
+    transform-origin: left top;
+
+    .tileMenuItem {
+        position: relative;
+        display: inline-block;
+        width: 308px;
+        height: 147px;
+        margin-right: 17px;
+        white-space: nowrap;
+        background-color: #21a7b5;
+        color: white;
+        font-size: 38px;
+        text-align: center;
+        font-family: MyriadPro;
+
+        .fa {
+            position: absolute;
+            font-size: 90px;
+            color: black;
+            opacity: 0.1;
+            z-index: 0;
+            left: 0px;
+            right: 0px;
+        }
+
+        .fa-book {
+            font-size: 110px;
+            top: 18px;
+        }
+
+        .fa-globe {
+            font-size: 120px;
+            top: 8px;
+        }
+
+        .fa-database {
+            font-size: 100px;
+            top: 20px;
+        }
+
+        .fa-server {
+            font-size: 110px;
+            top: 18px;
+        }
+
+        .fa-folder {
+            font-size: 120px;
+            top: 8px;
+        }
+
+        .fa-envelope {
+            font-size: 110px;
+            top: 12px;
+        }
+
+        .fa-envelope-square {
+            font-size: 110px;
+            top: 12px;
+        }
+
+        .fa-copy {
+            font-size: 100px;
+            top: 16px;
+        }
+
+        .fa-paint-brush {
+            font-size: 110px;
+            top: 18px;
+        }
+
+        .fa-cloud-upload {
+            font-size: 110px;
+            top: 22px;
+        }
+
+        .fa-play-circle-o {
+            font-size: 110px;
+            top: 22px;
+        }
+        
+        .fa-list-alt {
+            top: 32px;
+        }
+
+        .buttonLabel {
+            position: absolute;
+            top: 40px;
+            z-index: 10;
+            text-align: center;
+            width: 100%;
+        }
+
+        .itemCount {
+            position: absolute;
+            right: 12px;
+            bottom: 0px;
+            font-size: 32px;
+        }
+    }
+
+    .tile-justified {
+        display: table;
+        width: 100%;
+        height: 100%;
+
+        .tile-cell {
+            display: table-cell;
+
+            a {
+                width: 100%;
+                .tileMenuItem {
+                    display: block;
+                    width: auto;
+                    font-size: 28px;
+                }
+            }
+        }
+    }
+
+    .tileMenuItem.highlighted {
+        background-color: #f68d4d !important;
+    }
+}
+body.adminLayout #appNotificationArea {
+    position: absolute;
+    left: 225px;
+    top: 75px;
+    right: 0;
+
+    .app-alert {
+        width: 100%;
+        font-family: Innogy-Medium;
+        font-size: 18px;
+        padding: 6px 20px;
+        border-width: 1px;
+        border-style: solid;
+
+        .alertSymbol {
+            padding-right: 10px;
+        }
+        .closeAlertIcon {
+            color: white;
+            float: right;
+            margin-top: 4px;
+            cursor: pointer;
+        }
+    }
+    .app-alert-success {
+        color: white;
+        background-color: $color_success;
+        border: none;
+    }
+    .app-alert-success.app-alert-odd {
+        background-color: darken($color_success, 5%);
+    }
+    .app-alert-error {
+        color: white;
+        background-color: $color_error;
+        border: none;
+    }
+    .app-alert-error.app-alert-odd {
+        background-color: darken($color_error, 5%);
+    }
+    .app-alert-warning {
+        color: #8a6d3b;
+        background-color: #fcf8e3;
+        border-color: #faebcc;
+    }
+    .app-alert-warning.app-alert-odd {
+        background-color: darken(#fcf8e3, 5%);
+    }
+    .app-alert-info {
+        color: #31708f;
+        background-color: #d9edf7;
+        border-color: #bce8f1;
+    }
+    .app-alert-info.app-alert-odd {
+        background-color: darken(#d9edf7, 5%);
+    }
+}
+#upperPanel {
+    @include no-select();
+    position: absolute;
+    left: 225px;
+    top: 75px;
+    right: 0px;
+    background-color: #3a3a3a;
+
+    .panelLabel {
+        position: absolute;
+        left: 55px;
+        top: 22px;
+        font-size: 18px;
+        font-family: FatTec;
+        color: white;
+    }
+    .backgroundDecoration {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+    }
+    .decorationWatcheye {
+        position: absolute;
+        left: 19px;
+        top: 56px;
+        width: 24px;
+        height: 24px;
+    }
+}
+#minimizedUpperPanel {
+    @include no-select();
+    position: absolute;
+    left: 225px;
+    top: 75px;
+    right: 0px;
+    height: 40px;
+    background-color: #3a3a3a;
+    display: none;
+    .panelLabel {
+        position: absolute;
+        left: 52px;
+        top: 10px;
+        font-size: 18px;
+        font-family: FatTec;
+        color: white;
+    }
+}
+#hideUpperPanelIcon, #showUpperPanelIcon {
+    position: absolute;
+    color: white;
+    top: 3px;
+    right: 37px;
+    font-size: 36px;
+    cursor: pointer;
+}
+#lowerPanel {
+    position: absolute;
+    left: 225px;
+    top: 75px;
+    right: 0px;
+}
+.lowerPanelNoOverlap {
+    width: calc(100% - 225px);
+    overflow: auto;
+}
+#lowerPanelContainer {
+    position: absolute;
+    left: 70px;
+    top: 120px;
+    right: 80px;
+
+    h4 {
+        font-family: FatTec;
+        font-size: 20px;
+        color: #457fa9;
+        margin-left: 25px;
+    }
+}
+#ContentContainer {
+    position: relative;
+    width: 100%;
+    height: auto;
+    margin-top: 60px;
+    margin-bottom: 60px;
+
+    .form-horizontal, .details-list {
+        color: #455d73;
+    }
+    .form-horizontal .radio, .form-horizontal .checkbox {
+        margin-left: 20px;
+    }
+    .details-list {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        margin-left: 35px;
+        width: auto;
+        td:first-child {
+            width: 300px;
+        }
+        td:nth-child(2) {
+            width: 400px;
+        }
+    }
+    .nexusDetailsButtons {
+        margin-left: 35px;
+    }
+    .btn-omnius-blue, .btn-omnius-red {
+        padding-top: 4px;
+        margin-right: 14px;
+        height: 35px;
+    }
+}
+.moduleSubMenuArea {
+    @include no-select();
+    position: absolute;
+    left: 420px;
+    top: 49px;
+    white-space: nowrap;
+    vertical-align: top;
+    transform-origin: left top;
+}
+.modelErrorMessage {
+    margin-top: 40px;
+    color: #f06771;
+    font-family: Myriad-Pro;
+    font-size: 22px;
+}
+.hiddenOption {
+    display: none;
+}
+.CodeMirror pre {
+    line-height: 15px !important;
+    white-space: pre-wrap;
+    word-break: break-all; 
+    word-wrap: break-word;
+}
+.loginFullPage {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    z-index: -10;
+    background-image: url(/Content/Images/login-background.png);
+    background-size: 100% 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    #loginForm {
+        background-color: rgba(0,0,0,0.6);
+        border: 3px solid rgba(120,120,120,0.3);
+        border-radius: 8px;
+        width: 50vw;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 5px 15px;
+    }
+
+    label, h2 {
+        color: white;
+    }
+}
+ 

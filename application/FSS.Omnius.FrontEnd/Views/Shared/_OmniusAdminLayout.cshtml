@@ -1,0 +1,106 @@
+﻿@using FSS.Omnius.Modules.CORE
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.9">
+    <title>@Page.Title</title>
+    <link rel="stylesheet" href="@Services.GetFileVersion("/Content/CssLibs/Bundle.min.css")" />
+    <link rel="stylesheet" href="@Services.GetFileVersion("/Content/Scss/Bundle/AdminStyleBundle.min.css")" />
+    <script type="text/javascript" src="@Services.GetFileVersion("/Scripts/Bundles/modernizr.min.js")"></script>
+    @RenderSection("Styles", false)
+    @{ FSS.Omnius.Modules.Entitron.Entity.Persona.ModuleAccessPermission map = FSS.Omnius.Modules.CORE.COREobject.i.User.ModuleAccessPermission; }
+</head>
+<body data-module="@Page.ModuleClass" class="@Page.ModuleClass adminLayout pageSpinnerShown">
+    <script type="text/javascript" src="@Services.GetFileVersion("/Scripts/Bundles/jquery.min.js")"></script>
+    <script type="text/javascript" src="@Services.GetFileVersion("/Scripts/Bundles/commonLibraries.min.js")"></script>
+    <script type="text/javascript" src="@Services.GetFileVersion("/Scripts/Bundles/omniusUserScripts.min.js")"></script>
+    <script type="text/javascript" src="@Services.GetFileVersion("/Scripts/Bundles/omniusAdminScripts.min.js")"></script>  
+    <div id="topBar">
+        <div id="omniusLogo"></div>
+        <div class="searchField">
+            <img class="searchIcon" src="~/Content/Images/SearchIcon.png" />
+            <input type = "text" class="searchInput" />
+        </div>
+        <div class="userLabel">
+            <div class="avatar"></div>
+            <div class="name">@FSS.Omnius.Modules.CORE.COREobject.i.User.DisplayName</div>
+            <div class="role">@FSS.Omnius.Modules.CORE.COREobject.i.User.Job</div>
+            <div class="fa fa-caret-down"></div>
+        </div>
+    </div>
+    <div id="leftBar">
+        <ul class="leftMenu">
+            @if (map.Core)
+            {
+                <li id="adminMenuPortal"><a href="/CORE/Portal">CORE portal</a></li>
+            }
+            @if (map.Persona)
+            {
+                <li id="identitySuperMenu" class="expandable">Identity management</li>
+                <li id="adminMenuPersona" class="subMenu identitySubMenu"><a href="/Persona/Rights">Access to applications</a></li>
+                <li id="adminMenuPersonaModules" class="subMenu identitySubMenu"><a href="/Persona/Modules">Access to modules</a></li>
+                <li id="adminMenuPersona" class="subMenu identitySubMenu"><a href="/Persona/Account">Users</a></li>
+            }
+            @if (map.Master)
+            {
+                <li id="adminMenuApps"><a href="/Master/AppAdminManager">Application management</a></li>
+            }
+            @if (map.Nexus)
+            {
+                <li id="adminMenuNexus"><a href="/Nexus/LDAP">Integrations</a></li>
+            }
+            @if (map.Tapestry || map.Entitron || map.Mozaic)
+            {
+                <li id="appSuperMenu" class="expandable">Application designing</li>
+                if (map.Tapestry && Convert.ToInt32(TempData["appId"])!=30)
+                {
+                    <li id="adminMenuTapestry" class="subMenu appSubMenu"><a href="/Tapestry/Overview">Workflows</a></li>
+                }
+                if (map.Entitron)
+                {
+                    <li id="adminMenuDbDesigner" class="subMenu appSubMenu"><a href="/Entitron/DbDesigner">Data structures</a></li>
+                }
+                if (map.Mozaic && Convert.ToInt32(TempData["appId"]) != 30)
+                {
+                    <li id="adminMenuMozaic" class="subMenu appSubMenu"><a href="/Mozaic/Bootstrap">UI design</a></li>
+                }
+            }
+            @if (map.Hermes)
+            {
+            <li id="adminMenuHermes"><a href="/Hermes/SMTP">E-mails</a></li>
+            }
+            @if (map.Cortex) {
+            <li id="adminMenuCortex"><a href="/Cortex">Async tasks</a></li>
+            }
+            @if (map.Watchtower)
+            {
+            <li id="adminMenuWatchtower"><a href="/Watchtower">Logs­</a></li>
+            }
+            @if (map.Babylon)
+            {
+                <li id="adminMenuBabylon"><a href="/Babylon">Languages</a></li>
+            }
+	    @if (map.Babylon) 
+            {
+                <li id="adminMenuBabylon"><a href="/Babylon">Jazykové verze</a></li>
+            }
+            @if (map.Athena) {
+                <li id="adminMenuAthena"><a href="/Athena">Graphs</a></li>
+            }---
+            <li><a href="/">User section</a></li>
+        </ul>
+    </div>
+    <div id="pageOverlay">
+        <div class="spinner-2 largeSpinner">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
+    </div>
+    <div id="appNotificationArea"></div>
+    @RenderBody()
+
+    <script type="text/javascript" src="@Services.GetFileVersion("/Scripts/Bundles/knockout.min.js")"></script>  
+    @RenderSection("scripts", required: false)
+</body>
+</html>

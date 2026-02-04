@@ -1,0 +1,17 @@
+[
+  {
+    "outputFile": "Content/scss/Bundled.css",
+    "inputFile": "Content/scss/Bundled.scss",
+    "sourceMap": false
+  },
+  {
+    "outputFile": "Content/scss/Bundle/AdminStyleBundle.css",
+    "inputFile": "Content/scss/Bundle/AdminStyleBundle.scss",
+    "sourceMap": false
+  },
+  {
+    "outputFile": "Content/scss/Bundle/UserStyleBundle.css",
+    "inputFile": "Content/scss/Bundle/UserStyleBundle.scss",
+    "sourceMap": false
+  }
+]
