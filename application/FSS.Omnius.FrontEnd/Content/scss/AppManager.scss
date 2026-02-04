@@ -1,0 +1,95 @@
+﻿body.adminAppModule {
+    #upperPanel {
+        height: 135px;
+        z-index:10000;
+        position:fixed;
+    }
+    #lowerPanel {
+        top: 200px;
+        margin-bottom: 20px;
+    }
+    .appManagerLowerDecoration {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        z-index: -10
+    }
+    .adminAppTable {
+        margin-left: 85px;
+        margin-top: 70px;
+        width: 85%;
+
+        td {
+            min-width: 110px;
+        }
+        td.actions {
+            width: 430px;
+            white-space: nowrap;
+
+            .btn {
+                width: 100px;
+            }
+            form {
+                display: inline-block;
+            }
+        }
+    }
+    #btnAddApp {
+        margin-left: 85px;
+    }
+    .formTable {
+        label, select {
+            margin-bottom: 0px;
+            padding: 2px;
+            height: 30px;
+        }
+        select {
+            width: 180px;
+        }
+        tr {
+            height: 36px;
+        }
+        td {
+            vertical-align: middle;
+        }
+        tr td:first-child {
+            width: 230px;
+        }
+        #app-name {
+            width: 310px;
+        }
+    }
+    #validationResults {
+        position: absolute;
+        left: 290px;
+        top: 125px;
+        width: 70%;
+        #errorPanel {
+            background-color: #ffe0e0;
+            padding: 20px;
+            h1 {
+                margin-bottom: 30px;
+            }
+            .errorList {
+                font-size: 20px;
+            }
+            #btnRetryValidation {
+                margin-top: 30px;
+            }
+        }
+    }
+}
+
+#app-build-dialog {
+    .app-alert {
+        overflow: auto;
+    }
+    span.build-progress {
+        float: right;
+    }
+    progress {
+        vertical-align: -0.2em; 
+        //w3.org says progress elements should have a vertical align of -0.2 em. IEdge, of course, ignores this. 
+        //As a result, IEdge gets an ugly result. IE9 doesn't know <progress> at all, but it can't websocket either, so...
+    }
+}

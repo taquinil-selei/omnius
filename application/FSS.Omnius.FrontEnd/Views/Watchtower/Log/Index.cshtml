@@ -1,0 +1,230 @@
+﻿@using FSS.Omnius.Modules.Entitron.Entity.Watchtower;
+@using FSS.Omnius.Modules.Entitron.Entity.Persona;
+@using FSS.Omnius.Modules.Entitron.Entity.Master;
+@using FSS.Omnius.FrontEnd.Models;
+
+@model LogFilter
+@{
+    Page.Title = "Omnius Watchtower - Log";
+    Layout = "~/Views/Shared/_OmniusAdminLayout.cshtml";
+    Page.ModuleClass = "watchtowerModule";
+
+    int page = (int)ViewData["page"];
+    int perPage = (int)ViewData["perPage"];
+    int total = (int)ViewData["total"];
+    int pageCount = (int)Math.Ceiling((double)total / (double)perPage);
+
+    bool dotsBefore = page > 6;
+    bool dotsAfter = page + 6 < pageCount;
+}
+<div id="upperPanel">
+    <div id="watchtowerFormResponiveArea">
+        <div class="panelLabel">Watchtower</div>
+        <svg id="filterPanelDecoration" width="1300px" height="357px">
+            <path d="M31 0 L31 28 L65 62 L376 62" stroke="#49c4f1" stroke-width="1" fill="none" />
+            <path d="M31 357 L31 108 L65 74 L376 74" stroke="#49c4f1" stroke-width="1" fill="none" />
+            <path d="M31 47 L52 68 L31 89 L10 68 Z" stroke="#49c4f1" stroke-width="1" fill="none" />
+            <path d="M700 74 L1140 74 L1200 134 L1200 240 L980 240 L900 320 L190 320" stroke="#49c4f1" stroke-width="1" fill="none" />
+        </svg>
+        <img class="decorationWatcheye" src="~/Content/Images/watcheye_small.png" />
+        <div id="filterPanelLabel">Filter</div>
+        <form id="filterLogForm" method="post" action="/Watchtower">
+            <table id="filterLogTable">
+                <tr>
+                    <td><label for="level">Level</label></td>
+                    <td>
+                        @Html.DropDownListFor(f => f.LevelId, new SelectList(Model.Levels, "Value", "Text", "Selected"))
+                    </td>
+                    <td><label for="source">Server</label></td>
+                    <td>
+                        @Html.DropDownListFor(f => f.Server, new SelectList(Model.Servers))
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="user">User</label></td>
+                    <td>
+                        @Html.DropDownListFor(f => f.UserName, new SelectList(Model.Users, "UserName", "UserName"))
+                    </td>
+                    <td><label for="type">Source</label></td>
+                    <td>
+                        @Html.DropDownListFor(f => f.SourceId, new SelectList(Model.Sources, "Value", "Text", "Selected"))
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="time-from">Since</label></td>
+                    <td>
+                        @Html.TextBoxFor(f => f.TimeSince, Model.TimeSince.ToString("dd.MM.yyyy HH:mm"))
+                    </td>
+                    <td><label for="source">Application</label></td>
+                    <td>
+                        @Html.DropDownListFor(f => f.ApplicationName, new SelectList(Model.Applications, "Name", "DisplayName"))
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="time-to">To</label></td>
+                    <td>
+                        @Html.TextBoxFor(f => f.TimeTo, Model.TimeTo.ToString("dd.MM.yyyy HH:mm"))
+                    </td>
+                    <td><label for="source">Block</label></td>
+                    <td>
+                        @Html.DropDownListFor(f => f.BlockName, new SelectList(Model.Blocks, "Name", "DisplayName"))
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="message">Message</label></td>
+                    <td>
+                        @Html.TextBoxFor(f => f.Message)
+                    </td>
+                    <td><label for="source">Action</label></td>
+                    <td>
+                        @Html.DropDownListFor(f => f.ActionName, new SelectList(Model.Actions))
+                    </td>
+                </tr>
+            </table>
+            <div id="formButtonArea">
+                <input type="hidden" name="page" value="1" id="PageNumber" />
+                <button id="submitSearchForm" type="submit" class="btn-omnius-rectangular">Filter</button>
+                <button id="resetSearchForm" type="reset" class="btn-omnius-rectangular">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <div id="hideUpperPanelIcon" class="fa fa-caret-up"></div>
+</div>
+<div id="minimizedUpperPanel">
+    <div class="panelLabel">Watchtower</div>
+    <div id="showUpperPanelIcon" class="fa fa-caret-down"></div>
+</div>
+<div id="lowerPanel">
+    @if (Model.ResultItems.Count() > 0)
+    {
+        <table id="watchtowerLogTable" class="table table-bordered table-striped" style="width:100%">
+            <colgroup>
+                <col width="145" />
+                <col width="50" />
+                <col width="5%" />
+                <col width="5%" />
+                <col width="5%" />
+                <col width="5%" />
+                <col width="5%" />
+                <col width="5%" />
+                <col  />
+                <col width="30" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Level</th>
+                    <th>User</th>
+                    <th>Server</th>
+                    <th>Source</th>
+                    <th>Application</th>
+                    <th>Block</th>
+                    <th>Action</th>
+                    <th>Message</th>
+                    <th>Akce</th>
+                </tr>
+            </thead>
+            <tbody style="font-size:0.9em"> 
+                @foreach (LogItem item in Model.ResultItems) {
+                    <tr data-id="@item.Id">
+                        <td class="text-nowrap">@item.TimeString</td>
+                        <td class="text-nowrap text-center">@Html.Raw(item.LogLevelIcon)</td>
+                        <td class="text-nowrap">@item.UserName</td>
+                        <td class="text-nowrap">@item.Server</td>
+                        <td class="text-nowrap">@item.LogSourceString</td>
+                        <td class="text-nowrap">@item.Application</td>
+                        <td class="text-nowrap">@item.BlockName</td>
+                        <td class="text-nowrap">@item.ActionName</td>
+                        <td class="truncate-base"><span class="truncate">@Html.Raw(item.Message)</span></td>
+                        <td class="actions text-center"><a href="#" class="fa fa-search" title="View details"></a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <nav class="text-left" style="margin-bottom:50px">
+            <ul class="pagination" style="margin-bottom: 0px">
+                @if(page > 1) {
+                    <li><a href="#" data-page="@(page - 1)" title="Previous"><span>&laquo;</span></a></li>
+                }
+                @for(int i = 1; i <= pageCount; i++) {
+                    if ((dotsBefore && i > 1 && i < (page - 5)) || (dotsAfter && (i - page > 5) && i != pageCount)) {
+                        if (dotsAfter && i == (pageCount - 1)) {
+                            <li class="disabled"><a href="#">...</a></li>
+                        }
+
+                        if (dotsBefore && i == 2) {
+                            <li class="disabled"><a href="#">...</a></li>
+                        }
+                        continue;
+                    }
+
+                    <li class="@(i == page ? "active" : "")"><a href="#" data-page="@i" title="Page @i">@i</a></li>
+                }
+                @if(page < pageCount) {
+                    <li><a href="#" data-page="@(page + 1)" title="Next"><span>&raquo;</span></a></li>
+                }
+            </ul>
+            <div class="clearfix"></div>
+            <small>Showing items from @((page * perPage - perPage + 1).ToString()) to @((page * perPage > total ? total : page * perPage).ToString()) from @(total.ToString()) results</small>
+        </nav>
+    }
+    else
+    {
+        <div class="noSearchResults">No logs matches filter</div>
+    }
+</div>
+<div class="hide" id="detail">
+    <form onsubmit="return false" class="form form-horizontal">
+        <div class="col-xs-12">
+            <div class="form-group" style="margin-bottom:0">
+                <label class="control-label col-sm-2">Time:</label>
+                <div class="col-sm-10"><p class="form-control-static">{time}</p></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+                <label class="control-label col-sm-2">Level:</label>
+                <div class="col-sm-10"><p class="form-control-static">{level}</p></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+                <label class="control-label col-sm-2">User:</label>
+                <div class="col-sm-10"><p class="form-control-static">{user}</p></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+                <label class="control-label col-sm-2">Server:</label>
+                <div class="col-sm-10"><p class="form-control-static">{server}</p></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+                <label class="control-label col-sm-2">Source:</label>
+                <div class="col-sm-10"><p class="form-control-static">{source}</p></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+                <label class="control-label col-sm-2">Application:</label>
+                <div class="col-sm-10"><p class="form-control-static">{application}</p></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+                <label class="control-label col-sm-2">Block:</label>
+                <div class="col-sm-10"><p class="form-control-static">{block}</p></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+                <label class="control-label col-sm-2">Action:</label>
+                <div class="col-sm-10"><p class="form-control-static">{action}</p></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+                <label class="control-label col-sm-2">Message:</label>
+                <div class="col-sm-10"><p class="form-control-static">{message}</p></div>
+            </div>
+            <div class="form-group row-innerex" style="margin-bottom:0">
+                <label class="control-label col-sm-2">Inner exception:</label>
+                <div class="col-sm-10"><p class="form-control-static"><a href="#" data-innerid="{innerId}">see details</a></p></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+                <label class="control-label col-sm-2">Vars:</label>
+                <div class="col-sm-10"><pre style="margin-top:7px">{vars}</pre></div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+                <label class="control-label col-sm-2">StackTrace:</label>
+                <div class="col-sm-10"><pre style="margin-top:7px">{st}</pre></div>
+            </div>
+        </div>
+    </form>
+</div>

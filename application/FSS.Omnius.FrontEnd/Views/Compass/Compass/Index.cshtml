@@ -1,0 +1,16 @@
+﻿@using FSS.Omnius.Modules.Compass.Service;
+@model ElasticServiceFoundDocument[]
+
+@{
+
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_OmniusUserLayout.cshtml";
+}
+
+<h2>Search results</h2>
+
+
+@Html.Partial("AjaxIndex")
+
+
+

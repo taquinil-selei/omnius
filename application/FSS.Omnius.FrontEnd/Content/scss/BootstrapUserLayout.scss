@@ -1,0 +1,61 @@
+﻿.mozaicBootstrapPage {
+
+    .data-table {
+        background-image: url("/Content/Images/modalpreloader.gif");
+        background-position: center center;
+        background-repeat: no-repeat;
+        thead {
+            visibility: hidden;
+        }
+        tbody {
+            visibility: hidden;
+        }
+        tfoot {
+            display: table-header-group;
+            visibility: hidden;
+            th input {
+                width: 100%;
+            }
+        }
+        .actionIcons {
+            white-space: nowrap;
+            i.fa {
+                margin: 0px 5px; 
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+body.Leaderboard {
+    #userTopBar {
+        display: none;
+    }
+
+    #userLeftBar {
+        display: none;
+    }
+
+    #userContentArea {
+        left: 0px;
+        top: 0px;
+        background-color: #07081e;
+    }
+
+    h1 {
+        color: #f8682a;
+        font-family: sans-serif;
+        font-weight: 400;
+        font-size: 50px;
+        text-align: center;
+    }
+    thead th {
+        color:initial !important;
+    }
+    .data-table.table thead tr {
+        background-color: #fff !important;
+    }
+}
+body.XMU.Overview {
+    font-size: 12px;
+}
