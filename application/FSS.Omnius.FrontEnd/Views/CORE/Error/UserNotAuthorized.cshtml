@@ -1,0 +1,15 @@
+﻿@using FSS.Omnius.Modules.CORE
+
+@if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+{
+    Layout = "~/Views/Shared/_PartialViewAjaxLayout.cshtml";
+    @Html.Raw("You are not authorized");
+}
+else
+{
+    ViewBag.Title = "You are not authorized";
+    Layout = "~/Views/Shared/_OmniusUserLayout.cshtml";
+    <link href="~/Content/CssLibs/ErrorCss.css" rel="stylesheet" />
+
+    <script>window.onload = function () { ShowAppNotification("You are not authorized", "error"); };</script>
+}

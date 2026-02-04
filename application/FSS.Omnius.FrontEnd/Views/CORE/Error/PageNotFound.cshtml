@@ -1,0 +1,16 @@
+﻿@using FSS.Omnius.Modules.CORE
+
+@if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+{
+    Layout = "~/Views/Shared/_PartialViewAjaxLayout.cshtml";
+    @Html.Raw("Page not found");
+}
+else
+{
+    ViewBag.Title = "Page not found";
+    Layout = "~/Views/Shared/_OmniusUserLayout.cshtml";
+
+    <link href="~/Content/CssLibs/ErrorCss.css" rel="stylesheet" />
+
+    <script>window.onload = function () { ShowAppNotification("Page not found", "error"); };</script>
+}
